@@ -1,0 +1,4 @@
+wandb*
+*.npz
+reg_*
+__pycache__

@@ -1,0 +1,50 @@
+hyper_parameters:
+    load_epoch: 0
+    epochs: 30
+    lr_init: 1.e-3
+    new_lr: 0
+    lr_factor: 0.1
+    resblocks: 3
+    reslayers: [8, 16, 32, 64]
+    batch_size: 512
+    valid_batch_size: 512
+    test_batch_size: 512
+    channels: [0,1,2,3,4,5,6,7,8,9,10,11,12] # Channels used in trainings
+    loss_func: mse
+    optimizer: Adam # Adam, SGD
+    scheduler: ReduceLROnPlateau # ReduceLROnPlateau, cosine
+    patience: 2
+    scheduler_mode: min
+    n_train: -1
+    n_valid: -1
+    n_test: 500
+
+
+model_info:
+    timestr: None
+    cuda: 0
+    run_logger: True
+    iter_freq: 500
+    random_seed: 41 #
+    model_file: torch_resnet_concat #resnet_model #torch_original_resnet_concat ### torch_resnet_concat
+    model_name: ResNet # resnet34_modified#resnet152 ##ResNet
+
+
+wandb_parameters:
+    wandb_update: True
+    wandb_key: 51b58a76963008d6010f73edbd6d0617a772c9df
+    wandb_project: reg_H5_seperate_train_valid_dset
+
+dir_info:
+    out_dir: /bighome/bbbam/reg_H5_seperate_train_valid_dset
+    train_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_tauDR0p4_m1p2To17p2_dataset_2_unbaised_v2_normalised_nan_replaced_combined_train.h5
+    valid_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_tauDR0p4_m1p2To17p2_dataset_2_unbaised_v2_normalised_nan_replaced_combined_valid.h5
+    test_dir: /scratch/bbbam/
+    num_data_workers: 50
+    cluster: UA
+
+scales:
+    m0_scale: 17.2
+
+channel_list:
+    channels: ["Tracks_pt", "Tracks_dZSig", "Tracks_d0Sig", "ECAL_energy","HBHE_energy", "Pix_1", "Pix_2", "Pix_3", "Pix_4", "Tib_1", "Tib_2" ,"Tob_1", "Tob_2"]
