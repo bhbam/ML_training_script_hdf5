@@ -1,6 +1,6 @@
 hyper_parameters:
     load_epoch: 0
-    epochs: 30
+    epochs: 50
     lr_init: 1.e-3
     new_lr: 0
     lr_factor: 0.1
@@ -15,28 +15,28 @@ hyper_parameters:
     scheduler: ReduceLROnPlateau # ReduceLROnPlateau, cosine
     patience: 2
     scheduler_mode: min
-    n_train: -1
-    n_valid: -1
-    n_test: 500
+    n_train: 2000
+    n_valid: 1000
+    n_test: 2000
 
 
 model_info:
     timestr: None
     cuda: 0
-    run_logger: True
+    run_logger: False
     iter_freq: 500
     random_seed: 41 #
-    model_file: torch_resnet_concat #resnet_model #torch_original_resnet_concat ### torch_resnet_concat
-    model_name: ResNet # resnet34_modified#resnet152 ##ResNet
+    model_file:  torch_original_resnet_concat  ##torch_original_resnet_concat ### torch_resnet_concat (ResNet) with ieta and iphi only
+    model_name:  resnet18 ## resnet18 , resnet34, resnet50, resnet101, resnet152
 
 
 wandb_parameters:
-    wandb_update: True
+    wandb_update: False
     wandb_key: 51b58a76963008d6010f73edbd6d0617a772c9df
-    wandb_project: reg_H5_seperate_train_valid_dset
+    wandb_project: resnet152_reg
 
 dir_info:
-    out_dir: /bighome/bbbam/reg_H5_seperate_train_valid_dset
+    out_dir: /bighome/bbbam/resnet152_reg
     train_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_tauDR0p4_m1p2To17p2_dataset_2_unbaised_v2_normalised_nan_replaced_combined_train.h5
     valid_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_tauDR0p4_m1p2To17p2_dataset_2_unbaised_v2_normalised_nan_replaced_combined_valid.h5
     test_dir: /scratch/bbbam/

@@ -88,8 +88,8 @@ except FileNotFoundError:
 except yaml.YAMLError as e:
     print(f"Error parsing YAML file: {e}")
 
-
-
+torch.manual_seed(random_seed)
+random.seed(random_seed)
 np.random.seed(random_seed)
 os.environ["CUDA_VISIBLE_DEVICES"]=str(cuda)
 use_cuda = torch.cuda.is_available()
@@ -120,11 +120,13 @@ n_total = len(reg_dset)
 if load_epoch == 0:
     if n_train != -1:
         total_indices = list(range(n_train))
+        random.shuffle(total_indices)
         train_size = int(0.9 * n_train)
         train_indices, valid_indices = total_indices[:train_size], total_indices[train_size:]
 
     else:
         total_indices = list(range(n_total))
+        random.shuffle(total_indices)
         train_size = int(0.9 * n_total)
         train_indices, valid_indices = total_indices[:train_size], total_indices[train_size:]
 

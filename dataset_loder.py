@@ -47,42 +47,7 @@ class H5Dataset_(Dataset):
 
 
 
-''' data loder defination without ieta and iphi'''
 
-class H5Dataset_extra(Dataset):
-    def __init__(self, file_path, indices):
-        self.file_path = file_path
-        self.indices = indices
-        self.file = h5py.File(file_path, 'r')
-
-    def __len__(self):
-        return len(self.indices)
-
-    def __getitem__(self, idx):
-        index = self.indices[idx]
-        data = self.file['all_jet'][index]
-        ieta = self.file['ieta'][index]
-        iphi = self.file['iphi'][index]
-        am = self.file['am'][index]
-        return data, am, iphi, ieta
-
-# with lazy loadings
-class H5Dataset_extra_(Dataset):
-    def __init__(self, file_path, indices ):
-        self.indices = indices
-        self.file_path = file_path
-
-    def __len__(self):
-        return len(self.indices)
-
-    def __getitem__(self, idx):
-        idx = self.indices[idx]
-        with h5py.File(self.file_path, 'r') as file:
-            data = file['all_jet'][idx]
-            ieta = file['ieta'][idx]
-            iphi = file['iphi'][idx]
-            am = file['am'][idx]
-            return data, am, iphi, ieta
 
 ## Efficient h5 data loading
 class ChunkedSampler(Sampler):

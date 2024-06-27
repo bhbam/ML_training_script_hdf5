@@ -90,6 +90,8 @@ except yaml.YAMLError as e:
 
 
 
+torch.manual_seed(random_seed)
+random.seed(random_seed)
 np.random.seed(random_seed)
 os.environ["CUDA_VISIBLE_DEVICES"]=str(cuda)
 use_cuda = torch.cuda.is_available()
@@ -203,8 +205,7 @@ val_loader = DataLoader(valid_dset, batch_size=BATCH_SIZE, sampler=val_sampler, 
 
 
 networks = importlib.import_module(model_file)
-if model_name=='ResNet':
-    resnet = networks.ResNet(len(indices), resblocks, reslayers)
+resnet = networks.ModifiedResNet(resnet_=model_name,input_channels=len(indices))
 resnet=resnet.to(device)
 
 optimizer = set_optimizer(optimizer_,lr_init)
@@ -231,11 +232,8 @@ def do_eval(resnet, val_loader, mae_best, epoch):
     with torch.no_grad():
         for i, data in enumerate(val_loader):
             X, am = data[0].to(device), data[1].to(device)
-            iphi, ieta = data[2].to(device), data[3].to(device)
             am = transform_y(am, m0_scale)
-            iphi = iphi/360.
-            ieta = ieta/140.
-            logits = resnet([X, iphi, ieta])
+            logits = resnet(X)
             loss= mae_loss_wgtd(logits, am).item()
             loss_ += loss
             logits, am = inv_transform(logits,m0_scale), inv_transform(am,m0_scale)
@@ -327,15 +325,11 @@ for e in range(epochs):
     now = time.time()
     for i, data in enumerate(train_loader):
         X, am = data[0].to(device), data[1].to(device)
-        iphi, ieta = data[2].to(device), data[3].to(device)
-
         with torch.no_grad():
             am = transform_y(am, m0_scale)
-            iphi = iphi/360.
-            ieta = ieta/140.
 
         optimizer.zero_grad()
-        logits = resnet([X, iphi, ieta])
+        logits = resnet(X)
         loss = mae_loss_wgtd(logits, am)
         loss.backward()
         optimizer.step()
