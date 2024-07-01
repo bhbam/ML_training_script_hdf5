@@ -6,13 +6,13 @@
 #SBATCH --gres=gpu:1                                # Allocate GPU
 #SBATCH -N 1                                        # only use 1 node — in this case, 16 cores on 1 node
 #SBATCH --mem-per-cpu=5G                           # reserve 6G of memory
-#SBATCH -J reg_sep               # job name
-#SBATCH -o reg_sep.%A
+#SBATCH -J M_3p7_test               # job name
+#SBATCH -o M_3p7_test.%A
 #SBATCH --mail-user=bbbam@crimson.ua.edu
 
 source /share/apps/modulefiles/conda_init.sh
 conda activate Pytorch_VEN
 module load compilers/intel/fakeintel
 date
-python  mass_trainer_with_ieta_iphi_separete_train_valid_set.py UA_mass_config.ymal
+python  mass_inference_with_ieta_iphi_separete_train_valid_set.py UA_mass_config.ymal
 date
