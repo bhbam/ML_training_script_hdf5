@@ -6,8 +6,8 @@
 #SBATCH --gres=gpu:1                                # Allocate GPU
 #SBATCH -N 1                                        # only use 1 node — in this case, 16 cores on 1 node
 #SBATCH --mem-per-cpu=5G                           # reserve 6G of memory
-#SBATCH -J reg_sep               # job name
-#SBATCH -o reg_sep.%A
+#SBATCH -J ResNet50_new               # job name
+#SBATCH -o ResNet50_new.%A
 #SBATCH --mail-user=bbbam@crimson.ua.edu
 
 source /share/apps/modulefiles/conda_init.sh

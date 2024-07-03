@@ -15,6 +15,10 @@ import pickle
 import wandb
 import importlib
 
+from grokfast import gradfilter_ma, gradfilter_ema
+alpha = 0.98
+lamb= 2.0
+
 def read_config(file_path):
     with open(file_path, 'r') as file:
         config = yaml.safe_load(file)
@@ -310,6 +314,7 @@ if load_epoch != 0:
 
 
 logger(">> Training <<<<<<<<")
+grads = None
 for e in range(epochs):
     loss_t = 0.
     mae_t = 0.
@@ -332,6 +337,7 @@ for e in range(epochs):
         logits = resnet(X)
         loss = mae_loss_wgtd(logits, am)
         loss.backward()
+        grads = gradfilter_ema(resnet, grads=grads, alpha=alpha, lamb=lamb)
         optimizer.step()
         epoch_wgt += len(am)
         loss_t += loss.item()
