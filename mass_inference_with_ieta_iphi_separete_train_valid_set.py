@@ -74,6 +74,7 @@ try:
     out_dir= dir_info.get('out_dir')
     train_dir= dir_info.get('train_dir')
     valid_dir= dir_info.get('valid_dir')
+    test_dir= dir_info.get('test_dir')
     model_dir= dir_info.get('model_dir')
     cluster= dir_info.get('cluster')
     num_data_workers= dir_info.get('num_data_workers')
@@ -115,7 +116,7 @@ else:
     timestr=timestr
 
 
-file_test = glob.glob(f'{valid_dir}')[0]
+file_test = glob.glob(f'{test_dir}')[0]
 
 
 test_dset = RegressionDataset(file_test, preload_size=BATCH_SIZE)
@@ -132,7 +133,7 @@ else:
 n_test = len(test_indices)
 
 if run_logger:
-    for d in ['INFERENCE_DATA_Signal']:
+    for d in ['INFERENCE_DATA_test']:
         if not os.path.isdir(out_dir+'/'+decay+'/%s'%d):
             os.makedirs(out_dir+'/'+decay+'/%s'%d)
     f = open(out_dir +'/'+ decay+'/%s_timestamp_%s.log'%(decay, timestr), 'w')
@@ -249,7 +250,7 @@ def do_eval(resnet, test_loader, epoch):
         output_dict["mre"] = mre_
 
 
-        with open(f'{out_dir}/{decay}/INFERENCE_DATA/Mass_{signal_mass}_{score_str}_inference_data.pkl', "wb") as outfile:
+        with open(f'{out_dir}/{decay}/INFERENCE_DATA_test/Mass_{signal_mass}_{score_str}_inference_data.pkl', "wb") as outfile:
           pickle.dump(output_dict, outfile, protocol=2) #protocol=2 for compatibility
         mae_retun = np.mean(mae_)
         del m_pred_
