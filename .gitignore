@@ -2,4 +2,4 @@ wandb*
 *.npz
 reg_*
 __pycache__
-ResNet_old.89249
+ResNet*
