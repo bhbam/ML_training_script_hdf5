@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.hub
 import torch.nn.functional as F
 
-##------------original resnet modified for my analysis
+##------------original resnet modified for my analysis -------------------
 
 class ModifiedResNet(nn.Module):
     def __init__(self, resnet_ = 'resnet50', input_channels=13, out_channels=1):
@@ -31,7 +31,7 @@ class ModifiedResNet(nn.Module):
 
 
 
-# More deeply Modified resnet -------------------------------------------------------------------------------------------------
+# ---------More deeply Modified old resnet without ieta and iphi-------------------------------------------------------------------------------------------------
 
 class ResBlock(nn.Module):
 
@@ -71,6 +71,7 @@ class ResBlock(nn.Module):
         out = self.relu(out)
 
         return out
+
 
 class ResNet(nn.Module):
 
@@ -178,8 +179,6 @@ class ResNet(nn.Module):
         #    x = self.fcout(x)
         # print("x------------",x)
         return x
-
-
 
 ## simple CNN'
 class CNN(nn.Module):
