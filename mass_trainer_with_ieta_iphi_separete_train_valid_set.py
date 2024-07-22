@@ -97,8 +97,9 @@ device = torch.device(f"cuda:{cuda}" if use_cuda else "cpu")
 torch.backends.cudnn.benchmark = True
 
 
-
-m0_scale    = torch.tensor(m0_scale)
+mass_mean = torch.tensor(8.893934)
+mass_std  = torch.tensor(2.7809753)
+m0_scale  = torch.tensor(m0_scale)
 channel_list = ["Tracks_pt", "Tracks_dZSig", "Tracks_d0Sig", "ECAL_energy","HBHE_energy", "Pix_1", "Pix_2", "Pix_3", "Pix_4", "Tib_1", "Tib_2" ,"Tob_1", "Tob_2"]
 
 
@@ -232,13 +233,15 @@ def do_eval(resnet, val_loader, mae_best, epoch):
         for i, data in enumerate(val_loader):
             X, am = data[0].to(device), data[1].to(device)
             iphi, ieta = data[2].to(device), data[3].to(device)
-            am = transform_y(am, m0_scale)
+            # am = transform_y(am, m0_scale)
+            am = transform_norm_y(am, mass_mean, mass_std)
             iphi = iphi/360.
             ieta = ieta/140.
             logits = resnet([X, iphi, ieta])
             loss= mae_loss_wgtd(logits, am).item()
             loss_ += loss
-            logits, am = inv_transform(logits,m0_scale), inv_transform(am,m0_scale)
+            # logits, am = inv_transform_y(logits,m0_scale), inv_transform(am,m0_scale)
+            logits, am = inv_transform_norm_y(logits,mass_mean, mass_std), inv_transform_norm_y(am,mass_mean, mass_std)
             mae = (logits-am).abs()
             mre = (((logits-am).abs())/am)
             m_pred_.append(logits.detach().cpu().numpy())
@@ -330,7 +333,8 @@ for e in range(epochs):
         iphi, ieta = data[2].to(device), data[3].to(device)
 
         with torch.no_grad():
-            am = transform_y(am, m0_scale)
+            # am = transform_y(am, m0_scale)
+            am = transform_norm_y(am, mass_mean, mass_std)
             iphi = iphi/360.
             ieta = ieta/140.
 
@@ -342,7 +346,8 @@ for e in range(epochs):
         epoch_wgt += len(am)
         loss_t += loss.item()
         n_trained += 1
-        logits, am = inv_transform(logits,m0_scale), inv_transform(am,m0_scale)
+        # logits, am = inv_transform_y(logits,m0_scale), inv_transform_y(am,m0_scale)
+        logits, am = inv_transform_norm_y(logits, mass_mean, mass_std), inv_transform_norm_y(am, mass_mean, mass_std)
         mae =  (logits-am).abs().mean()
         mre = (((logits-am).abs())/am).mean()
         mae_t += mae.item()
