@@ -8,8 +8,15 @@ import pyarrow.parquet as pq
 def transform_y(y, m0_scale):
     return y/m0_scale
 
-def inv_transform(y, m0_scale):
+def inv_transform_y(y, m0_scale):
     return y*m0_scale
+
+'''Using mean and std z score'''
+def transform_norm_y(y, mean, std):
+    return (y - mean) / std
+
+def inv_transform_norm_y(y, mean, std):
+    return y * std + mean
 
 ''' data loder defination without ieta and iphi'''
 
