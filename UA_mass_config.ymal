@@ -1,18 +1,18 @@
 hyper_parameters:
     load_epoch: 0
-    epochs: 50
+    epochs: 100
     lr_init: 1.e-3
     new_lr: 0
     lr_factor: 0.1
     resblocks: 3
     reslayers: [8, 16, 32, 64]
-    batch_size: 512
-    valid_batch_size: 512
-    test_batch_size: 512
+    batch_size: 1024
+    valid_batch_size: 1024
+    test_batch_size: 1024
     channels: [0,1,2,3,4,5,6,7,8,9,10,11,12] # Channels used in trainings
     loss_func: mse
     optimizer: Adam # Adam, SGD
-    scheduler: ReduceLROnPlateau # ReduceLROnPlateau, cosine
+    scheduler: cosine # ReduceLROnPlateau, cosine
     patience: 2
     scheduler_mode: min
     n_train: -1
@@ -26,27 +26,29 @@ model_info:
     run_logger: True
     iter_freq: 500
     random_seed: 41 #
-    model_file:  torch_original_resnet_concat  ##torch_original_resnet_concat ### torch_resnet_concat (ResNet) with ieta and iphi only
-    model_name:  ResNet #ResNet ## resnet18 , resnet34, resnet50, resnet101, resnet152
+    model_file: torch_resnet_concat   ##torch_original_resnet_concat ### torch_resnet_concat (ResNet, ResNet_BN) with ieta and iphi only
+    model_name: ResNet #ResNet ## resnet18 , resnet34, resnet50, resnet101, resnet152
 
 
 wandb_parameters:
     wandb_update: True
     wandb_key: 51b58a76963008d6010f73edbd6d0617a772c9df
-    wandb_project: ResNet_without_ieta_iphi
+    wandb_project: ResNet_Tau_decay
 
 dir_info:
-    out_dir: /bighome/bbbam/ResNet_without_ieta_iphi_mass_norm
-    train_dir: /scratch/bbbam/normalized_nan_replaced_m1p2To17p2_massreg_samples_chunksize_32_h5/chunksize_32_IMG_aToTauTau_Hadronic_tauDR0p4_m1p2To17p2_dataset_2_unbaised_v2_normalised_nan_replaced_combined_train.h5
-    valid_dir: /scratch/bbbam/normalized_nan_replaced_m1p2To17p2_massreg_samples_chunksize_32_h5/chunksize_32_IMG_aToTauTau_Hadronic_tauDR0p4_m1p2To17p2_dataset_2_unbaised_v2_normalised_nan_replaced_combined_valid.h5
+    out_dir: /bighome/bbbam/ResNet_Tau_decay
+    train_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_with_Tau_decay_m0To18_pt30T0300_normalized_unbiased_combined_h5/IMG_aToTauTau_Hadronic_with_Tau_decay_m0To18_pt30T0300_original_unbiased_combined_train_normalized.h5
+    valid_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_with_Tau_decay_m0To18_pt30T0300_normalized_unbiased_combined_h5/IMG_aToTauTau_Hadronic_with_Tau_decay_m0To18_pt30T0300_original_unbiased_combined_valid_normalized.h5
     test_dir: /scratch/bbbam/signal_normalized_h5/signal__M3p7_signal_v2_1_normalized.h5
     model_dir: /bighome/bbbam/ResNet_reg/13_ch_massregressor_ResNet/MODELS/model_epoch6__mae2.4528.pkl # load this model
-    num_data_workers: 50
+    num_data_workers: 35
     cluster: UA
 
 scales:
     signal_mass: 3.7 # To test signal mass
     m0_scale: 17.2
+    mass_mean: 9.010697
+    mass_std: 5.1918135
 
 channel_list:
     channels: ["Tracks_pt", "Tracks_dZSig", "Tracks_d0Sig", "ECAL_energy","HBHE_energy", "Pix_1", "Pix_2", "Pix_3", "Pix_4", "Tib_1", "Tib_2" ,"Tob_1", "Tob_2"]

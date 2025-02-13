@@ -59,6 +59,8 @@ try:
 
 
     m0_scale= scales.get('m0_scale')
+    mass_mean= scales.get('mass_mean')
+    mass_std= scales.get('mass_std')
 
 
 
@@ -97,8 +99,8 @@ device = torch.device(f"cuda:{cuda}" if use_cuda else "cpu")
 torch.backends.cudnn.benchmark = True
 
 
-mass_mean = torch.tensor(8.893934)
-mass_std  = torch.tensor(2.7809753)
+mass_mean = torch.tensor(mass_mean)
+mass_std  = torch.tensor(mass_std)
 m0_scale  = torch.tensor(m0_scale)
 channel_list = ["Tracks_pt", "Tracks_dZSig", "Tracks_d0Sig", "ECAL_energy","HBHE_energy", "Pix_1", "Pix_2", "Pix_3", "Pix_4", "Tib_1", "Tib_2" ,"Tob_1", "Tob_2"]
 
@@ -117,8 +119,8 @@ else:
 file_train = glob.glob(f'{train_dir}')[0]
 file_valid = glob.glob(f'{valid_dir}')[0]
 
-train_dset = RegressionDataset(file_train, preload_size=BATCH_SIZE)
-valid_dset = RegressionDataset(file_valid, preload_size=BATCH_SIZE)
+train_dset = RegressionDataset(file_train, preload_size=32)
+valid_dset = RegressionDataset(file_valid, preload_size=32)
 n_total_train = len(train_dset)
 n_total_valid = len(valid_dset)
 
@@ -206,6 +208,8 @@ val_loader = DataLoader(valid_dset, batch_size=BATCH_SIZE, sampler=val_sampler, 
 networks = importlib.import_module(model_file)
 if model_name=='ResNet':
     resnet = networks.ResNet(len(indices), resblocks, reslayers)
+if model_name=='ResNet_BN':
+    resnet = networks.ResNet_BN(len(indices), resblocks, reslayers)
 resnet=resnet.to(device)
 
 optimizer = set_optimizer(optimizer_,lr_init)
@@ -271,7 +275,6 @@ def do_eval(resnet, val_loader, mae_best, epoch):
         logger('%d: Val loss:%f, mae:%f, mre:%f'%(epoch, loss_/len(val_loader), np.mean(mae_), np.mean(mre_)))
         score_str = 'epoch%d__mae%.4f'%(epoch, np.mean(mae_))
 
-        scheduler.step(loss_/len(val_loader))
         print(optimizer.param_groups[0]['lr'])
 
 
@@ -297,7 +300,6 @@ def do_eval(resnet, val_loader, mae_best, epoch):
         del m_true_
         del mae_
         del mre_
-        # gc.collect()
         return mae_retun
 
 # MAIN #
@@ -325,7 +327,7 @@ for e in range(epochs):
     logger('>> Epoch %d <<<<<<<<'%(epoch))
 
     # Run training
-    scheduler.step(mae_best)
+
     resnet.train()
     now = time.time()
     for i, data in enumerate(train_loader):
@@ -367,12 +369,14 @@ for e in range(epochs):
     # Run Validation
     resnet.eval()
     val_mae = do_eval(resnet, val_loader, mae_best, epoch)
-    # scheduler.step(val_mae)
+    scheduler.step(val_mae)
     curr_lr = scheduler._last_lr[0]
     if wandb_:
         wandb.log({"Epoch": epoch,
                     "resblocks" : resblocks,
                     "m0_scale": m0_scale,
+                    "mass_mean": mass_mean,
+                    "mass_std": mass_std,
                     "Lr": curr_lr,
                     "n_total_train": n_total_train,
                     "n_train": n_train,
