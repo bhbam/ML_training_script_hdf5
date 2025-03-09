@@ -63,6 +63,8 @@ try:
 
 
     m0_scale= scales.get('m0_scale')
+    mass_mean= scales.get('mass_mean')
+    mass_std= scales.get('mass_std')
 
 
 
@@ -103,8 +105,8 @@ device = torch.device(f"cuda:{cuda}" if use_cuda else "cpu")
 torch.backends.cudnn.benchmark = True
 
 
-mass_mean = torch.tensor(8.893934)
-mass_std  = torch.tensor(2.7809753)
+mass_mean = torch.tensor(mass_mean)
+mass_std  = torch.tensor(mass_std)
 m0_scale    = torch.tensor(m0_scale)
 channel_list = ["Tracks_pt", "Tracks_dZSig", "Tracks_d0Sig", "ECAL_energy","HBHE_energy", "Pix_1", "Pix_2", "Pix_3", "Pix_4", "Tib_1", "Tib_2" ,"Tob_1", "Tob_2"]
 
