@@ -1,0 +1,52 @@
+hyper_parameters:
+    load_epoch: 6
+    epochs: 50
+    lr_init: 1.e-3
+    new_lr: 0
+    lr_factor: 0.1
+    resblocks: 3
+    reslayers: [8, 16, 32, 64]
+    batch_size: 256
+    valid_batch_size: 256
+    test_batch_size: 1024
+    channels: [0,1,2,3,4,5,6,7,8,9,10,11,12] # Channels used in trainings
+    loss_func: mse
+    optimizer: Adam # Adam, SGD
+    scheduler: ReduceLROnPlateau # ReduceLROnPlateau, cosine
+    patience: 2
+    scheduler_mode: min
+    n_train: -1
+    n_valid: -1
+    n_test: -1
+
+
+model_info:
+    timestr: None
+    cuda: 0
+    run_logger: True
+    iter_freq: 500
+    random_seed: 41 #
+    model_file:  torch_resnet_concat  ##torch_original_resnet_concat ### torch_resnet_concat (ResNet) with ieta and iphi only
+    model_name:  ResNet ## resnet18 , resnet34, resnet50, resnet101, resnet152
+
+
+wandb_parameters:
+    wandb_update: False
+    wandb_key: 51b58a76963008d6010f73edbd6d0617a772c9df
+    wandb_project: ResNet_reg
+
+dir_info:
+    out_dir: /pscratch/sd/b/bbbam/13_ch_massregressor_ResNet
+    train_dir: /pscratch/sd/b/bbbam/IMG_aToTauTau_Hadronic_tauDR0p4_m1p2To17p2_dataset_2_unbaised_v2_normalised_nan_replaced_combined_train.h5
+    valid_dir: /pscratch/sd/b/bbbam/IMG_aToTauTau_Hadronic_tauDR0p4_m1p2To17p2_dataset_2_unbaised_v2_normalised_nan_replaced_combined_valid.h5
+    test_dir: /pscratch/sd/b/bbbam/signal_with_trigger_normalized_h5/signal_with_trigger_M12_normalized.h5
+    model_dir: /pscratch/sd/b/bbbam/13_ch_massregressor_ResNet/MODELS/model_epoch6__mae2.4528.pkl # load this model
+    num_data_workers: 8
+    cluster: PL
+
+scales:
+    signal_mass: 12 # To test signal mass
+    m0_scale: 17.2
+
+channel_list:
+    channels: ["Tracks_pt", "Tracks_dZSig", "Tracks_d0Sig", "ECAL_energy","HBHE_energy", "Pix_1", "Pix_2", "Pix_3", "Pix_4", "Tib_1", "Tib_2" ,"Tob_1", "Tob_2"]
