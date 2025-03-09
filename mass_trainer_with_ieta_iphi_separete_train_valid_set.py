@@ -119,8 +119,8 @@ else:
 file_train = glob.glob(f'{train_dir}')[0]
 file_valid = glob.glob(f'{valid_dir}')[0]
 
-train_dset = RegressionDataset(file_train, preload_size=32)
-valid_dset = RegressionDataset(file_valid, preload_size=32)
+train_dset = RegressionDataset_with_min_max_scaling(file_train, preload_size=32)
+valid_dset = RegressionDataset_with_min_max_scaling(file_valid, preload_size=32)
 n_total_train = len(train_dset)
 n_total_valid = len(valid_dset)
 
@@ -244,7 +244,7 @@ def do_eval(resnet, val_loader, mae_best, epoch):
             logits = resnet([X, iphi, ieta])
             loss= mae_loss_wgtd(logits, am).item()
             loss_ += loss
-            # logits, am = inv_transform_y(logits,m0_scale), inv_transform(am,m0_scale)
+            # logits, am = inv_transform_y(logits,m0_scale), inv_transform_y(am,m0_scale)
             logits, am = inv_transform_norm_y(logits,mass_mean, mass_std), inv_transform_norm_y(am,mass_mean, mass_std)
             mae = (logits-am).abs()
             mre = (((logits-am).abs())/am)

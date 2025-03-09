@@ -6,8 +6,8 @@
 #SBATCH --gres=gpu:1                                # Allocate GPU
 #SBATCH -N 1                                        # only use 1 node — in this case, 16 cores on 1 node
 #SBATCH --mem-per-cpu=7G                           # reserve 6G of memory
-#SBATCH -J slurm_Tau             # job name
-#SBATCH -o slurm_Tau.%A
+#SBATCH -J slurm_min_max_mass_norm             # job name
+#SBATCH -o slurm_min_max_mass_norm.%A
 #SBATCH --mail-user=bbbam@crimson.ua.edu
 
 source /share/apps/modulefiles/conda_init.sh

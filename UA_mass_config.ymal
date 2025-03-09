@@ -33,12 +33,12 @@ model_info:
 wandb_parameters:
     wandb_update: True
     wandb_key: 51b58a76963008d6010f73edbd6d0617a772c9df
-    wandb_project: ResNet_Tau_decay
+    wandb_project: ResNet_min_max_scaling_mass_norm
 
 dir_info:
-    out_dir: /bighome/bbbam/ResNet_Tau_decay
-    train_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_with_Tau_decay_m0To18_pt30T0300_normalized_unbiased_combined_h5/IMG_aToTauTau_Hadronic_with_Tau_decay_m0To18_pt30T0300_original_unbiased_combined_train_normalized.h5
-    valid_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_with_Tau_decay_m0To18_pt30T0300_normalized_unbiased_combined_h5/IMG_aToTauTau_Hadronic_with_Tau_decay_m0To18_pt30T0300_original_unbiased_combined_valid_normalized.h5
+    out_dir: /bighome/bbbam/ResNet_min_max_scaling_mass_norm
+    train_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_m1p2To18_pt30T0300_original_combined_unbiased_h5/IMG_aToTauTau_Hadronic_m1p2To3p6_pt30T0300_unbiased_original_combined_train.h5
+    valid_dir: /scratch/bbbam/IMG_aToTauTau_Hadronic_m1p2To18_pt30T0300_original_combined_unbiased_h5/IMG_aToTauTau_Hadronic_m1p2To3p6_pt30T0300_unbiased_original_combined_valid.h5
     test_dir: /scratch/bbbam/signal_normalized_h5/signal__M3p7_signal_v2_1_normalized.h5
     model_dir: /bighome/bbbam/ResNet_reg/13_ch_massregressor_ResNet/MODELS/model_epoch6__mae2.4528.pkl # load this model
     num_data_workers: 35
@@ -46,9 +46,9 @@ dir_info:
 
 scales:
     signal_mass: 3.7 # To test signal mass
-    m0_scale: 17.2
-    mass_mean: 9.010697
-    mass_std: 5.1918135
+    m0_scale: 14
+    mass_mean: 9.611604690551758
+    mass_std: 4.844956398010254
 
 channel_list:
     channels: ["Tracks_pt", "Tracks_dZSig", "Tracks_d0Sig", "ECAL_energy","HBHE_energy", "Pix_1", "Pix_2", "Pix_3", "Pix_4", "Tib_1", "Tib_2" ,"Tob_1", "Tob_2"]

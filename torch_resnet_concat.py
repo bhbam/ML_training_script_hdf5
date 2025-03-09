@@ -65,7 +65,47 @@ class ResNet(nn.Module):
         return x
 # model = ResNet(in_channels=13, nblocks=3, fmaps=[8,16,32,64])
 
+# Old ResNet architecture with ieta and iphi replacing reku with lekyrelu----------------------------
 
+# class ResNet_LiR(nn.Module):
+
+#     def __init__(self, in_channels, nblocks, fmaps):
+#         super(ResNet_LiR, self).__init__()
+#         self.fmaps = fmaps
+#         self.nblocks = nblocks
+#         self.conv0 = nn.Conv2d(in_channels, fmaps[0], kernel_size=7, stride=1, padding=1)
+#         self.layer1 = self.block_layers(self.nblocks, [fmaps[0],fmaps[0]])
+#         self.layer2 = self.block_layers(1, [fmaps[0],fmaps[1]])
+#         self.layer3 = self.block_layers(self.nblocks, [fmaps[1],fmaps[1]])
+#         self.layer4 = self.block_layers(1, [fmaps[1],fmaps[2]])
+#         self.layer5 = self.block_layers(self.nblocks, [fmaps[2],fmaps[2]])
+#         self.layer6 = self.block_layers(1, [fmaps[2],fmaps[3]])
+#         self.layer7 = self.block_layers(self.nblocks, [fmaps[3],fmaps[3]])
+#         self.fc = nn.Linear(self.fmaps[3]+2, 1)
+#         self.GlobalMaxPool2d = nn.AdaptiveMaxPool2d((1,1))
+
+#     def block_layers(self, nblocks, fmaps):
+#         layers = []
+#         for _ in range(nblocks):
+#             layers.append(ResBlock(fmaps[0], fmaps[1]))
+#         return nn.Sequential(*layers)
+
+    # def forward(self, X):
+    #     x = self.conv0(X[0])
+    #     x = F.leaky_relu(x, negative_slope=0.01)
+    #     x = self.layer1(x)
+    #     x = self.layer2(x)
+    #     x = self.layer3(x)
+    #     x = self.layer4(x)
+    #     x = self.layer5(x)
+    #     x = self.layer6(x)
+    #     x = self.layer7(x)
+    #     x = self.GlobalMaxPool2d(x)
+    #     x = x.view(x.size()[0], self.fmaps[3])
+    #     x = torch.cat([x, X[1], X[2]], 1)
+    #     x = self.fc(x)
+    #     return x
+# model = ResNet_LiR(in_channels=13, nblocks=3, fmaps=[8,16,32,64])
 
 
 # Old ResNet architecture with added batch normalization with ieta and iphi-----------------

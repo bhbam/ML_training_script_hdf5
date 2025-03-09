@@ -60,6 +60,8 @@ try:
 
 
     m0_scale= scales.get('m0_scale')
+    mass_mean= scales.get('mass_mean')
+    mass_std= scales.get('mass_std')
     signal_mass= scales.get('signal_mass')
 
 
@@ -102,6 +104,8 @@ torch.backends.cudnn.benchmark = True
 
 
 m0_scale    = torch.tensor(m0_scale)
+mass_mean   = torch.tensor(mass_mean)
+mass_std    = torch.tensor(mass_std)
 channel_list = ["Tracks_pt", "Tracks_dZSig", "Tracks_d0Sig", "ECAL_energy","HBHE_energy", "Pix_1", "Pix_2", "Pix_3", "Pix_4", "Tib_1", "Tib_2" ,"Tob_1", "Tob_2"]
 
 
