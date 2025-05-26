@@ -111,8 +111,8 @@ class RegressionDataset(Dataset):
             self.preloaded_iphi = self.iphi[preload_start:preload_end]
 
         local_idx = idx - self.preload_start
-        # data = self.preloaded_data[local_idx]
-        data = np.delete(self.preloaded_data[local_idx], 4, axis=0) # removing HCAL
+        data = self.preloaded_data[local_idx]
+        # data = np.delete(self.preloaded_data[local_idx], 4, axis=0) # removing HCAL
         labels = self.preloaded_labels[local_idx]
         ieta = self.preloaded_ieta[local_idx]
         iphi = self.preloaded_iphi[local_idx]
@@ -161,13 +161,15 @@ class RegressionDataset_with_min_max_scaling(Dataset):
         ieta = self.preloaded_ieta[local_idx]
         iphi = self.preloaded_iphi[local_idx]
         
-        scaling_factors = np.array([0.02, 1, 2, 0.2, 1]) 
+        
         zero_supression_min = np.array([0.001, 0.0001, 0.0001, 0.001, 0.001])
         zero_supression_max = np.array([1000, 20, 10, 500, 100])
+        scaling_factors = np.array([0.02, 1, 2, 0.2, 1]) 
         # Zero-suppress pixels: 
         data[:5] = np.where(np.abs(data[:5]) < zero_supression_min[:, np.newaxis, np.newaxis], 0, data[:5])
         data[:5] = np.where(np.abs(data[:5]) > zero_supression_max[:, np.newaxis, np.newaxis], 0, data[:5])
         data[:5] *= scaling_factors[:, np.newaxis, np.newaxis]  # Apply scaling to first 5 channels
+        
         if self.transforms:
             data = self.transforms(data)
         return torch.from_numpy(data), torch.from_numpy(labels),torch.from_numpy(iphi),torch.from_numpy(ieta)
