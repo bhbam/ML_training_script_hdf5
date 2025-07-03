@@ -248,7 +248,7 @@ class ResNet_map(nn.Module):
     def forward(self, X):
         x = map_to_image_batch(X[0])
         x = self.conv0(x)
-        # x = F.relu(x)
+        x = F.relu(x)
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
