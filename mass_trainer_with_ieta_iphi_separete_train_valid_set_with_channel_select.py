@@ -211,8 +211,8 @@ if model_name=='ResNet':
     resnet = networks.ResNet(len(indices), resblocks, reslayers)
 if model_name=='ResNet_BN':
     resnet = networks.ResNet_BN(len(indices), resblocks, reslayers)
-if model_name=='ResNet_map':
-    resnet = networks.ResNet_map(len(indices), resblocks, reslayers)
+if model_name=='ResNet_mapA':
+    resnet = networks.ResNet_mapA(len(indices), resblocks, reslayers, 0.5)
 resnet=resnet.to(device)
 
 optimizer = set_optimizer(optimizer_,lr_init)
