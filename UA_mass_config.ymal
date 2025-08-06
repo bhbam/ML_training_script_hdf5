@@ -5,7 +5,7 @@ hyper_parameters:
     new_lr: 0
     lr_factor: 0.1
     resblocks: 3
-    reslayers: [8, 16, 32, 64]
+    reslayers: [1, 2, 3, 4]
     batch_size: 1024
     valid_batch_size: 1024
     test_batch_size: 1024
@@ -25,18 +25,18 @@ model_info:
     cuda: 0
     run_logger: True
     iter_freq: 500
-    random_seed: 41 #
+    random_seed: 41 
     model_file: torch_resnet_concat   ##torch_original_resnet_concat ### torch_resnet_concat (ResNet, ResNet_BN) with ieta and iphi only
-    model_name: ResNet_mapA #ResNet ## resnet18 , resnet34, resnet50, resnet101, resnet152
+    model_name: ResNet_MultiChannel_conv_with_map #ResNet_mapA, ResNet, resnet18 , resnet34, resnet50, resnet101, resnet152
 
 
 wandb_parameters:
     wandb_update: True
     wandb_key: 51b58a76963008d6010f73edbd6d0617a772c9df
-    wandb_project: ResNet_mapA_0p5_mN1p2To22_unbaised
+    wandb_project: ResNet_MultiChannel_conv_with_map_mN1p2To22_unbaised
 
 dir_info:
-    out_dir: /bighome/bbbam/ResNet_mapA_0p5_mN1p2To22_unbaised
+    out_dir: /bighome/bbbam/ResNet_MultiChannel_conv_with_map_mN1p2To22_unbaised
     train_dir: /scratch/bbbam/IMG_ATo2Tau_hadronic_massregssion_samples_mN1p2To22_pt30To300_original_combined_unbaised/IMG_ATo2Tau_hadronic_massregssion_samples_mN1p2To22_pt30To300_original_combined_unbiased_train.h5
     valid_dir: /scratch/bbbam/IMG_ATo2Tau_hadronic_massregssion_samples_mN1p2To22_pt30To300_original_combined_unbaised/IMG_ATo2Tau_hadronic_massregssion_samples_mN1p2To22_pt30To300_original_combined_unbiased_valid.h5
     test_dir: /scratch/bbbam/signal_normalized_h5/signal__M3p7_signal_v2_1_normalized.h5

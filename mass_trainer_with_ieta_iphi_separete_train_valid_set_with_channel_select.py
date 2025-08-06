@@ -212,7 +212,11 @@ if model_name=='ResNet':
 if model_name=='ResNet_BN':
     resnet = networks.ResNet_BN(len(indices), resblocks, reslayers)
 if model_name=='ResNet_mapA':
-    resnet = networks.ResNet_mapA(len(indices), resblocks, reslayers, 0.5)
+    resnet = networks.ResNet_mapA(len(indices), resblocks, reslayers, 1)
+if model_name=='ResNet_MultiChannel_conv':
+    resnet = networks.ResNet_MultiChannel_conv(len(indices), resblocks, reslayers)
+if model_name=='ResNet_MultiChannel_conv_with_map':
+    resnet = networks.ResNet_MultiChannel_conv_with_map(len(indices), resblocks, reslayers)
 resnet=resnet.to(device)
 
 optimizer = set_optimizer(optimizer_,lr_init)
