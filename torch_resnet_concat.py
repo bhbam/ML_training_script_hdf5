@@ -348,3 +348,158 @@ class ResNet_mapA(nn.Module):
         x = torch.cat([x, X[1], X[2]], 1)
         x = self.fc(x)
         return x
+    
+
+
+
+# Old resnet with multiple channels and map channel convulution -----------------
+class ResBlock_MultiChannel_conv(nn.Module):
+    def __init__(self, in_channels, out_channels, group):
+        super(ResBlock_MultiChannel_conv, self).__init__()
+        self.downsample = out_channels // in_channels
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, groups=group, stride=self.downsample, padding=1)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, groups=group, kernel_size=3, padding=1)
+        self.shortcut = nn.Conv2d(in_channels, out_channels, groups=group, kernel_size=1, stride=self.downsample)
+
+    def forward(self, x):
+        residual = x
+        out = self.relu(self.conv1(x))
+        out = self.conv2(out)
+        if residual.shape != out.shape:
+            residual = self.shortcut(x)
+        out += residual
+        out = self.relu(out)
+        return out
+
+
+class ResNet_MultiChannel_conv(nn.Module):
+    def __init__(self, in_channels, nblocks, fmaps):
+        super(ResNet_MultiChannel_conv, self).__init__()
+        self.fmaps = fmaps
+        self.in_channels = in_channels
+        self.nblocks = nblocks
+        self.conv0 = nn.Conv2d(in_channels, fmaps[0]*in_channels, groups=in_channels, kernel_size=7, stride=1, padding=1)
+
+        self.layer1 = self.block_layers(nblocks, [fmaps[0], fmaps[0]], in_channels)
+        self.layer2 = self.block_layers(1, [fmaps[0], fmaps[1]], in_channels)
+        self.layer3 = self.block_layers(nblocks, [fmaps[1], fmaps[1]], in_channels)
+        self.layer4 = self.block_layers(1, [fmaps[1], fmaps[2]], in_channels)
+        self.layer5 = self.block_layers(nblocks, [fmaps[2], fmaps[2]], in_channels)
+        self.layer6 = self.block_layers(1, [fmaps[2], fmaps[3]], in_channels)
+        self.layer7 = self.block_layers(nblocks, [fmaps[3], fmaps[3]], in_channels)
+
+        self.GlobalMaxPool2d = nn.AdaptiveMaxPool2d((1,1))
+        self.fc = nn.Linear(fmaps[3]*in_channels + 2, 1)
+
+    def block_layers(self, nblocks, fmaps, in_channels):
+        layers = []
+        for _ in range(nblocks):
+            layers.append(ResBlock_MultiChannel_conv(fmaps[0]*in_channels, fmaps[1]*in_channels, in_channels))
+        return nn.Sequential(*layers)
+
+    def forward(self, X):
+        x = X[0]
+        x = F.relu(self.conv0(x))
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
+        x = self.layer5(x)
+        x = self.layer6(x)
+        x = self.layer7(x)
+        x = self.GlobalMaxPool2d(x)
+        x = torch.flatten(x, 1)
+        x = torch.cat([x, X[1], X[2]], dim=1)
+        x = self.fc(x)
+        return x
+
+
+
+# resnet = ResNet_MultiChannel_conv(in_channels= 13, nblocks=3, fmaps=[1,2,3,4])
+
+# Old resnet with multiple channels and map channel convulution with map layer-----------------
+class ResBlock_MultiChannel_conv_with_map(nn.Module):
+    def __init__(self, in_channels, out_channels, group):
+        super(ResBlock_MultiChannel_conv_with_map, self).__init__()
+        self.downsample = out_channels // in_channels
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, groups=group, stride=self.downsample, padding=1)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, groups=group, kernel_size=3, padding=1)
+        self.shortcut = nn.Conv2d(in_channels, out_channels, groups=group, kernel_size=1, stride=self.downsample)
+
+    def forward(self, x):
+        residual = x
+        out = self.relu(self.conv1(x))
+        out = self.conv2(out)
+        if residual.shape != out.shape:
+            residual = self.shortcut(x)
+        out += residual
+        out = self.relu(out)
+        return out
+
+
+class ResNet_MultiChannel_conv_with_map(nn.Module):
+    def __init__(self, in_channels, nblocks, fmaps):
+        super(ResNet_MultiChannel_conv_with_map, self).__init__()
+        self.fmaps = fmaps
+        self.in_channels = in_channels
+        self.nblocks = nblocks
+        self.conv0 = nn.Conv2d(in_channels, fmaps[0]*in_channels, groups=in_channels, kernel_size=7, stride=1, padding=1)
+        self.layer1 = self.block_layers(nblocks, [fmaps[0], fmaps[0]], in_channels)
+        self.layer2 = self.block_layers(1, [fmaps[0], fmaps[1]], in_channels)
+        self.layer3 = self.block_layers(nblocks, [fmaps[1], fmaps[1]], in_channels)
+        self.layer4 = self.block_layers(1, [fmaps[1], fmaps[2]], in_channels)
+        self.layer5 = self.block_layers(nblocks, [fmaps[2], fmaps[2]], in_channels)
+        self.layer6 = self.block_layers(1, [fmaps[2], fmaps[3]], in_channels)
+        self.layer7 = self.block_layers(nblocks, [fmaps[3], fmaps[3]], in_channels)
+
+        self.conv0_map = nn.Conv2d(1, fmaps[0], groups=1, kernel_size=7, stride=1, padding=1)
+        self.layer1_map = self.block_layers(nblocks, [fmaps[0], fmaps[0]], 1)
+        self.layer2_map = self.block_layers(1, [fmaps[0], fmaps[1]], 1)
+        self.layer3_map = self.block_layers(nblocks, [fmaps[1], fmaps[1]], 1)
+        self.layer4_map = self.block_layers(1, [fmaps[1], fmaps[2]], 1)
+        self.layer5_map = self.block_layers(nblocks, [fmaps[2], fmaps[2]], 1)
+        self.layer6_map = self.block_layers(1, [fmaps[2], fmaps[3]], 1)
+        self.layer7_map = self.block_layers(nblocks, [fmaps[3], fmaps[3]], 1)
+
+        self.GlobalMaxPool2d = nn.AdaptiveMaxPool2d((1,1))
+        self.fc = nn.Linear(fmaps[3]*in_channels + 6, 1)
+
+    def block_layers(self, nblocks, fmaps, in_channels):
+        layers = []
+        for _ in range(nblocks):
+            layers.append(ResBlock_MultiChannel_conv_with_map(fmaps[0]*in_channels, fmaps[1]*in_channels, in_channels))
+        return nn.Sequential(*layers)
+
+    def forward(self, X):
+        x = self.conv0(X[0])
+        x_map = image_map(X[0])
+        x_map = self.conv0_map(x_map)
+        x = F.relu(x)
+        x_map = F.relu(x_map)
+        x = self.layer1(x)
+        x_map = self.layer1_map(x_map)
+        x = self.layer2(x)
+        x_map = self.layer2_map(x_map)
+        x = self.layer3(x)
+        x_map = self.layer3_map(x_map)
+        x = self.layer4(x)
+        x_map = self.layer4_map(x_map)
+        x = self.layer5(x)
+        x_map = self.layer5_map(x_map)
+        x = self.layer6(x)
+        x_map = self.layer6_map(x_map)
+        x = self.layer7(x)
+        x_map = self.layer7_map(x_map)
+        x = self.GlobalMaxPool2d(x)
+        x_map = self.GlobalMaxPool2d(x_map)
+        x = torch.cat([x, x_map], dim=1) 
+        x = torch.flatten(x, 1)
+        x = torch.cat([x, X[1], X[2]], 1)
+        x = self.fc(x)
+        return x
+
+
+
+# resnet = ResNet_MultiChannel_conv_with_map(in_channels= 13, nblocks=3, fmaps=[1,2,3,4])
