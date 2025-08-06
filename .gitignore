@@ -3,7 +3,7 @@ wandb*
 reg_*
 __pycache__
 ResNet*
-slurm_*
+slurm*
 *.npz
 *.png
 test_data

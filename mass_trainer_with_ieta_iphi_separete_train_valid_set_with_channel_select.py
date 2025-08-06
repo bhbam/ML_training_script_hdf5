@@ -106,10 +106,11 @@ channel_list = ["Tracks_pt", "Tracks_dZSig", "Tracks_d0Sig", "ECAL_energy","HBHE
 
 
 channels_used = [channel_list[ch] for ch in indices]
+channel_tag = '_'.join(channels_used)
 layers_names = ' | '.join(channels_used)
 
 
-decay = f'{len(indices)}_ch_massregressor_{model_name}'
+decay = f'{len(indices)}_{model_name}_{channel_tag}'
 
 if timestr == 'None':
     timestr=time.strftime("%Y-%m-%d-%H:%M:%S")
@@ -119,8 +120,8 @@ else:
 file_train = glob.glob(f'{train_dir}')[0]
 file_valid = glob.glob(f'{valid_dir}')[0]
 
-train_dset = RegressionDataset_with_min_max_scaling(file_train, preload_size=32)
-valid_dset = RegressionDataset_with_min_max_scaling(file_valid, preload_size=32)
+train_dset = RegressionDataset_with_channel_selector(file_train, selected_channels=indices, preload_size=32)
+valid_dset = RegressionDataset_with_channel_selector(file_valid, selected_channels=indices, preload_size=32)
 n_total_train = len(train_dset)
 n_total_valid = len(valid_dset)
 
@@ -210,6 +211,12 @@ if model_name=='ResNet':
     resnet = networks.ResNet(len(indices), resblocks, reslayers)
 if model_name=='ResNet_BN':
     resnet = networks.ResNet_BN(len(indices), resblocks, reslayers)
+if model_name=='ResNet_mapA':
+    resnet = networks.ResNet_mapA(len(indices), resblocks, reslayers, 1)
+if model_name=='ResNet_MultiChannel_conv':
+    resnet = networks.ResNet_MultiChannel_conv(len(indices), resblocks, reslayers)
+if model_name=='ResNet_MultiChannel_conv_with_map':
+    resnet = networks.ResNet_MultiChannel_conv_with_map(len(indices), resblocks, reslayers)
 resnet=resnet.to(device)
 
 optimizer = set_optimizer(optimizer_,lr_init)
