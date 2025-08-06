@@ -7,3 +7,4 @@ slurm_*
 *.npz
 *.png
 test_data
+.ipynb_checkpoints*
