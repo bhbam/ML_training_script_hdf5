@@ -297,7 +297,7 @@ class ResBlock_mapA(nn.Module):
 
 class ResNet_mapA(nn.Module):
 
-    def __init__(self, in_channels, nblocks, fmaps, alpha):
+    def __init__(self, in_channels, nblocks, fmaps, alpha=1):
         super(ResNet_mapA, self).__init__()
         self.alpha = alpha
         self.fmaps = fmaps
@@ -321,7 +321,6 @@ class ResNet_mapA(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, X):
-        x = X[0]
         x = self.conv0(X[0])
         x_map = image_map(X[0])
         x_map = self.conv0_map(x_map)

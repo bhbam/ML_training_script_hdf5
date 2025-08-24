@@ -8,3 +8,4 @@ slurm*
 *.png
 test_data
 .ipynb_checkpoints/*
+sl_*
