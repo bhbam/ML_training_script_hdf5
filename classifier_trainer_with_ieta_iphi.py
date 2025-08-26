@@ -359,7 +359,7 @@ for e in range(epochs):
             logger('%d: (%d/%d) y_true: %s...'%(epoch, i+1, len(train_loader), str(np.squeeze(y.tolist()[:5]))))
             logger('%d: (%d/%d) Train loss:%f, acc:%f'%(epoch, i+1, len(train_loader), loss.item(), acc_))
             if wandb_:wandb.log({"train_loss": loss_t/(i+1)})
-            if wandb_:wandb.log({"train_mae": acc_/(i+1)})
+            if wandb_:wandb.log({"train_acc": acc_/(i+1)})
 
     now = time.time() - now
     logger('%d: Train time:%.2fs in %d steps for N:%d, wgt: %.f'%(epoch, now, len(train_loader), n_trained, epoch_wgt))

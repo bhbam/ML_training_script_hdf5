@@ -27,16 +27,16 @@ model_info:
     iter_freq: 500
     random_seed: 41 
     model_file: torch_resnet_concat   ##torch_original_resnet_concat ### torch_resnet_concat (ResNet, ResNet_BN) with ieta and iphi only
-    model_name: ResNet_mapA #ResNet_MultiChannel_conv_with_map #ResNet_mapA, ResNet, resnet18 , resnet34, resnet50, resnet101, resnet152
+    model_name: ResNet #ResNet_MultiChannel_conv_with_map #ResNet, ResNet, resnet18 , resnet34, resnet50, resnet101, resnet152
 
 
 wandb_parameters:
     wandb_update: True
     wandb_key: 51b58a76963008d6010f73edbd6d0617a772c9df
-    wandb_project: ResNet_mapA_classifier
+    wandb_project: ResNet_classifier
 
 dir_info:
-    out_dir: /bighome/bbbam/ResNet_mapA_classifier
+    out_dir: /bighome/bbbam/ResNet_classifier
     train_dir: /scratch/bbbam/classifier_signal_background_Run2_combined_hdf5/classifier_signal_background_Run2_combined.h5
     #train_dir: /scratch/bbbam/IMG_ATo2Tau_hadronic_massregssion_samples_mN1p2To22_pt30To300_original_combined_unbaised/IMG_ATo2Tau_hadronic_massregssion_samples_mN1p2To22_pt30To300_original_combined_unbiased_train.h5
     valid_dir: /scratch/bbbam/IMG_ATo2Tau_hadronic_massregssion_samples_mN1p2To22_pt30To300_original_combined_unbaised/IMG_ATo2Tau_hadronic_massregssion_samples_mN1p2To22_pt30To300_original_combined_unbiased_valid.h5
