@@ -241,7 +241,7 @@ def do_eval(resnet, val_loader, roc_auc_best, epoch):
         for i, data in enumerate(val_loader):
             X, y = data[0].to(device), data[1].to(device)
             iphi, ieta = data[2].to(device), data[3].to(device)
-    
+
             iphi = iphi/360.
             ieta = ieta/140.
             logits = resnet([X, iphi, ieta])
@@ -304,7 +304,7 @@ def do_eval(resnet, val_loader, roc_auc_best, epoch):
         del y_pred_
         del y_true_
         # gc.collect()
-        scheduler.step()
+        scheduler.step(roc_auc_best)
         return roc_auc_best
 
 # MAIN #
@@ -342,7 +342,7 @@ for e in range(epochs):
             iphi = iphi/360.
             ieta = ieta/140.
 
-        
+
 
         optimizer.zero_grad()
         logits = resnet([X, iphi, ieta])
