@@ -14,7 +14,7 @@ hyper_parameters:
     optimizer: Adam # Adam, SGD
     scheduler: cosine # ReduceLROnPlateau, cosine
     patience: 2
-    scheduler_mode: min
+    scheduler_mode: max
     n_train: -1
     n_valid: -1
     n_test: -1
